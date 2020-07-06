@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nintendo Disc Date</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </head>
+    <body>
+        <div class="section">
+            <div class="row center">
+                <h3>Nintendo Disc Date</h3>
+                <p>This outputs the date your GameCube, Wii, or Wii U disc was manufactured.</p>
+                <p>To use, put in the 8 character code on the back of your disc.</p>
+            </div>
+            <div class="row center">
+                <div class="input-field col s6 offset-s3">
+                    <input value="E09D1503" id="source" type="text" class="validate">
+                    <label class="active" for="source">Enter a Code</label>
+                </div>
+            </div>
+            <div class="row center">
+                <h5><div id="result"></div></h5>
+            </div>
+            <div class="row center">
+                <h6>Also check out the <a href="https://wiiremote.rc24.xyz/">Wii Remote Date</a> tool as well.</h6>
+            </div>
+            <div class="row center">
+                <h6>Area circled in yellow: the 8-digit code you run through this tool.</h6>
+                <h6>Area circled in red: the revision code. If your disc says 0A-1, 0A-2 on it, or ANYTHING that does not say 0A-0, <b>please tell Larsenv#2020 on Discord</b>.</h6>
+                <img width="50%" src="images/disc.png" alt="Disc" />
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    const source = document.getElementById('source');
+    const result = document.getElementById('result');
+
+    const inputHandler = function (e) {
+        var val = e.target.value.toUpperCase();
+
+        if (val) {
+            var location;
+            var year;
+            var month;
+            var date;
+            var day;
+            var productionRun;
+
+            if (val[0].charCodeAt(0) >= 48 && val[0].charCodeAt(0) <= 57) {
+                location = "Japan";
+            } else if (val[0].charCodeAt(0) >= 65 && val[0].charCodeAt(0) <= 90) {
+                location = "USA";
+            }
+
+            year = 2000 + parseInt(val.substring(2, 3));
+            
+            if (val[3].charCodeAt(0) >= 65 && val[3].charCodeAt(0) <= 76) {
+                month = val[3].charCodeAt(0) - 64;
+            } else {
+                month = "??"
+            }
+
+            day = parseInt(val.substring(4, 6));
+
+            if (day > 31) {
+                day = "??";
+            }
+
+            productionRun = parseInt(val.substring(6, 8));
+
+            date = "Made in " + location + "<br>";
+            date += "Production Date: " + year + "/" + month + "/" + day + "<br>";
+            date += "Production Run: " + productionRun;
+
+            if (month == "??") {
+                date += "<br><br>The month entered is incorrect.";
+            }
+
+            if (day > 31) {
+                date += "<br><br>The day entered is incorrect: " + day;
+            }
+
+            result.innerHTML = date;
+        }
+    }
+
+    source.addEventListener('input', inputHandler);
+    source.addEventListener('propertychange', inputHandler); // for IE8
+    // Firefox/Edge18-/IE9+ don’t fire on <select><option>
+    // source.addEventListener('change', inputHandler); 
+</script>
